@@ -1,26 +1,18 @@
-import cv2
 
-# Abre a câmera (0 é a câmera padrão, se tiver mais use 1, 2...)
-cap = cv2.VideoCapture(0)
+import cv2 as cv 
 
-if not cap.isOpened():
-    print("Não foi possível acessar a câmera")
-    exit()
+camera = cv.VideoCapture(0)
+rodando = True
 
-while True:
-    # Captura frame a frame
-    ret, frame = cap.read()
-    if not ret:
-        print("Erro ao capturar o frame")
-        break
+while rodando:
 
-    # Mostra a imagem
-    cv2.imshow("Minha Câmera", frame)
+    status, frame = camera.read()
 
-    # Sai do loop quando pressionar a tecla 'q'
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    if not status or cv.waitKey(1) & 0xff == ord('q'):
+        rodando = False
+
+    cv.imshow("Camera", frame)
 
 # Libera a câmera e fecha a janela
-cap.release()
-cv2.destroyAllWindows()
+camera.release()
+cv.destroyAllWindows()
