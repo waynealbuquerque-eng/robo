@@ -10,7 +10,7 @@ import time
 # Configuração
 ROBO_IP = "192.168.100.217"  # IP da Raspberry
 VIDEO_PORT = 9999
-CMD_PORT = 9998
+CMD_PORT = 8888
 # -------------------------------
 
 # --- Função: recebe vídeo do robô ---
@@ -84,7 +84,17 @@ def enviar_comandos():
             if state == 1 and prev_buttons[i] == 0:  # 0 -> 1
                 if now - last_press_time[i] > DEBOUNCE_TIME:
                     msg = f"BOTAO {i}\n"
-                    cmd_socket.sendall(msg.encode())
+                    # cmd_socket.sendall(msg.encode())
+                    if i == 0:
+                        msg = "FRENTE\n"
+                        cmd_socket.sendall(msg.encode())
+                    if i == 3:
+                        msg = "TRAS\n"
+                        cmd_socket.sendall(msg.encode())
+
+                    if i == 7:
+                        msg = "PARAR\n"
+                        cmd_socket.sendall(msg.encode())
                     print("Enviado:", msg.strip())
                     last_press_time[i] = now
             prev_buttons[i] = state
@@ -94,7 +104,7 @@ def enviar_comandos():
             val = joystick.get_axis(i)
             if abs(val - prev_axes[i]) > 0.1:  # só se mudar bastante
                 msg = f"EIXO {i} {val:.2f}\n"
-                cmd_socket.sendall(msg.encode())
+                # cmd_socket.sendall(msg.encode())
                 print("Enviado:", msg.strip())
                 prev_axes[i] = val
 
@@ -103,7 +113,14 @@ def enviar_comandos():
             hat = joystick.get_hat(i)
             if hat != (0, 0):
                 msg = f"DPAD {hat}\n"
-                cmd_socket.sendall(msg.encode())
+                # cmd_socket.sendall(msg.encode())
+
+                if hat == (1, 0):
+                    msg = "ESQ\n"
+                    cmd_socket.sendall(msg.encode())
+                if hat == (1, 0):
+                    msg = "DIR\n"
+                    cmd_socket.sendall(msg.encode())
                 print("Enviado:", msg.strip())
 
 
