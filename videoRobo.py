@@ -1,9 +1,7 @@
 import time
-
 import cv2
 import socket
 import struct
-import pickle
 
 # Configura socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,8 +22,6 @@ while True:
         break
 
     # Serializa o frame
-    # data = pickle.dumps(frame)
-
     ret, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
     data = buffer.tobytes()
 
