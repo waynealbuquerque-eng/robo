@@ -118,7 +118,7 @@ def enviar_comandos():
                 if hat == (1, 0):
                     msg = "ESQ\n"
                     cmd_socket.sendall(msg.encode())
-                if hat == (1, 0):
+                if hat == (-1, 0):
                     msg = "DIR\n"
                     cmd_socket.sendall(msg.encode())
                 print("Enviado:", msg.strip())

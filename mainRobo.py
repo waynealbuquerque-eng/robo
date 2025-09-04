@@ -13,8 +13,8 @@ import RPi.GPIO as GPIO
 # Motor da esquerda -> 23, 24
 MOTOR_DIR_IN1 = 17
 MOTOR_DIR_IN2 = 27
-MOTOR_ESQ_IN1 = 23
-MOTOR_ESQ_IN2 = 24
+MOTOR_ESQ_IN1 = 24
+MOTOR_ESQ_IN2 = 23
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
