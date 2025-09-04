@@ -1,76 +1,66 @@
 import RPi.GPIO as GPIO
 import time
 
-# --- Configuração ---
-motorA_in1 = 3
-motorA_in2 = 4
-motorB_in1 = 17
-motorB_in2 = 27
+# Definição dos pinos conectados ao L298
+motor1_in1 = 3
+motor1_in2 = 4
+motor2_in1 = 17
+motor2_in2 = 27
 
-GPIO.setmode(GPIO.BCM)  # usa numeração BCM
+# Configuração inicial
+GPIO.setmode(GPIO.BCM)  # Usa a numeração BCM
 GPIO.setwarnings(False)
 
-# Define os pinos como saída
-for pin in [motorA_in1, motorA_in2, motorB_in1, motorB_in2]:
+# Configura todos como saída
+for pin in [motor1_in1, motor1_in2, motor2_in1, motor2_in2]:
     GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
+    GPIO.output(pin, GPIO.LOW)  # Garante que começa desligado
 
-def parar():
-    GPIO.output(motorA_in1, GPIO.LOW)
-    GPIO.output(motorA_in2, GPIO.LOW)
-    GPIO.output(motorB_in1, GPIO.LOW)
-    GPIO.output(motorB_in2, GPIO.LOW)
-    print("parando")
-    time.sleep(2)
+def motor1_forward():
+    GPIO.output(motor1_in1, GPIO.HIGH)
+    GPIO.output(motor1_in2, GPIO.LOW)
 
-def frente(t=2):
-    GPIO.output(motorA_in1, GPIO.HIGH)
-    GPIO.output(motorA_in2, GPIO.LOW)
-    GPIO.output(motorB_in1, GPIO.HIGH)
-    GPIO.output(motorB_in2, GPIO.LOW)
-    time.sleep(t)
-    parar()
+def motor1_backward():
+    GPIO.output(motor1_in1, GPIO.LOW)
+    GPIO.output(motor1_in2, GPIO.HIGH)
 
-def tras(t=2):
-    GPIO.output(motorA_in1, GPIO.LOW)
-    GPIO.output(motorA_in2, GPIO.HIGH)
-    GPIO.output(motorB_in1, GPIO.LOW)
-    GPIO.output(motorB_in2, GPIO.HIGH)
-    time.sleep(t)
-    parar()
+def motor1_stop():
+    GPIO.output(motor1_in1, GPIO.LOW)
+    GPIO.output(motor1_in2, GPIO.LOW)
 
-def esquerda(t=1):
-    GPIO.output(motorA_in1, GPIO.LOW)
-    GPIO.output(motorA_in2, GPIO.HIGH)
-    GPIO.output(motorB_in1, GPIO.HIGH)
-    GPIO.output(motorB_in2, GPIO.LOW)
-    time.sleep(t)
-    parar()
+def motor2_forward():
+    GPIO.output(motor2_in1, GPIO.HIGH)
+    GPIO.output(motor2_in2, GPIO.LOW)
 
-def direita(t=1):
-    GPIO.output(motorA_in1, GPIO.HIGH)
-    GPIO.output(motorA_in2, GPIO.LOW)
-    GPIO.output(motorB_in1, GPIO.LOW)
-    GPIO.output(motorB_in2, GPIO.HIGH)
-    time.sleep(t)
-    parar()
+def motor2_backward():
+    GPIO.output(motor2_in1, GPIO.LOW)
+    GPIO.output(motor2_in2, GPIO.HIGH)
 
-# --- Teste Sequencial ---
+def motor2_stop():
+    GPIO.output(motor2_in1, GPIO.LOW)
+    GPIO.output(motor2_in2, GPIO.LOW)
+
 try:
-    print("Frente")
-    frente(2)
+    print("Motor 1 para frente")
+    motor1_forward()
+    time.sleep(2)
+    motor1_stop()
 
-    print("Trás")
-    tras(2)
+    print("Motor 1 para trás")
+    motor1_backward()
+    time.sleep(2)
+    motor1_stop()
 
-    print("Esquerda")
-    esquerda(2)
+    print("Motor 2 para frente")
+    motor2_forward()
+    time.sleep(2)
+    motor2_stop()
 
-    print("Direita")
-    direita(2)
-
-    print("Parado")
-    parar()
+    print("Motor 2 para trás")
+    motor2_backward()
+    time.sleep(2)
+    motor2_stop()
 
 finally:
+    print("Encerrando, limpando GPIO")
     GPIO.cleanup()
