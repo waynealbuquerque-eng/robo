@@ -1,0 +1,14 @@
+[Unit]
+Description=Robo UDP Service
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c 'source /home/wayne/Documents/Robo/bin/activate && python /home/wayne/Documents/Robo/robo/mainRobo.py'
+WorkingDirectory=/home/wayne/Documents/Robo/robo
+StandardOutput=append:/home/wayne/Documents/Robo/robo/robo.log
+StandardError=append:/home/wayne/Documents/Robo/robo/robo.log
+Restart=always
+User=wayne
+
+[Install]
+WantedBy=multi-user.target

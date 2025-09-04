@@ -73,6 +73,8 @@ def enviar_comandos():
     prev_axes = [0.0] * joystick.get_numaxes()
     DEBOUNCE_TIME = 0.2
     last_press_time = [0] * joystick.get_numbuttons()
+    prev_hats = [(0, 0)] * joystick.get_numhats()
+    last_hat_time = [0] * joystick.get_numhats()
 
     while True:
         pygame.event.pump()
@@ -108,20 +110,21 @@ def enviar_comandos():
                 print("Enviado:", msg.strip())
                 prev_axes[i] = val
 
-        # --- DPad ---
         for i in range(joystick.get_numhats()):
             hat = joystick.get_hat(i)
-            if hat != (0, 0):
-                msg = f"DPAD {hat}\n"
-                # cmd_socket.sendall(msg.encode())
+            now = time.time()
 
+            if hat != (0, 0) and (hat != prev_hats[i] or now - last_hat_time[i] > DEBOUNCE_TIME):
                 if hat == (1, 0):
                     msg = "ESQ\n"
                     cmd_socket.sendall(msg.encode())
-                if hat == (-1, 0):
+                elif hat == (-1, 0):
                     msg = "DIR\n"
                     cmd_socket.sendall(msg.encode())
                 print("Enviado:", msg.strip())
+                last_hat_time[i] = now
+
+            prev_hats[i] = hat
 
 
 # --- Threads: roda vídeo e comandos ao mesmo tempo ---
