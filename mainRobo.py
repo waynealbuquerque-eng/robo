@@ -47,61 +47,21 @@ def parar():
         GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
 
-def frente(duration=1, duty_cycle=50, freq=100):
+def frente(duration=None):
     with gpio_lock:
-        period = 1.0 / freq  # tempo de cada ciclo
-        on_time = period * (duty_cycle / 100.0)
-        off_time = period - on_time
+        GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
+        GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
+        GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
+        GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
+    _schedule_stop(duration)
 
-        start = time.time()
-        while True:
-            # Liga motores
-            GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
-            GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
-            GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
-            time.sleep(on_time)
-
-            # Desliga motores
-            GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
-            time.sleep(off_time)
-
-            # Para se o tempo de duração foi atingido
-            if duration is not None and (time.time() - start) >= duration:
-                break
-
-    parar()  # garante que pare ao final
-
-def tras(duration=1, duty_cycle=50, freq=100):
+def tras(duration=None):
     with gpio_lock:
-        period = 1.0 / freq  # tempo de cada ciclo
-        on_time = period * (duty_cycle / 100.0)
-        off_time = period - on_time
-
-        start = time.time()
-        while True:
-            # Liga motores
-            GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
-            GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
-            time.sleep(on_time)
-
-            # Desliga motores
-            GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
-            GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
-            time.sleep(off_time)
-
-            # Para se o tempo de duração foi atingido
-            if duration is not None and (time.time() - start) >= duration:
-                break
-
-    parar()  # garante que pare ao final
+        GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
+        GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
+        GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
+        GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
+    _schedule_stop(duration)
 
 def esquerda(duration=None):
     with gpio_lock:
@@ -110,8 +70,6 @@ def esquerda(duration=None):
         GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
     _schedule_stop(duration)
-
-
 
 def direita(duration=None):
     with gpio_lock:
