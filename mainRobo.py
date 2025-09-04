@@ -137,7 +137,7 @@ def handle_command(cmd_line: str):
     if not parts:
         return
     cmd = parts[0].upper()
-    dur = None
+    dur = 1
     if len(parts) >= 2:
         try:
             dur = float(parts[1])
