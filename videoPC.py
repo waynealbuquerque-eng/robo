@@ -3,6 +3,8 @@ import socket
 import struct
 import pickle
 
+import numpy as np
+
 # Conecta ao servidor
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(("192.168.100.217", 9999))
@@ -36,7 +38,8 @@ while True:
     data = data[frame_size:]
 
     # Desserializa
-    frame = pickle.loads(frame_data)
+    # frame = pickle.loads(frame_data)
+    frame = cv2.imdecode(np.fromstring(frame_data, np.uint8), cv2.IMREAD_COLOR)
 
     cv2.imshow("Video do Robo", frame)
     if cv2.waitKey(1) & 0xFF == ord("q"):
