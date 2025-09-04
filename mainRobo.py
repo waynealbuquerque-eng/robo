@@ -47,7 +47,7 @@ def parar():
         GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
 
-def frente(duration=None, duty_cycle=50, freq=100):
+def frente(duration=1, duty_cycle=50, freq=100):
     with gpio_lock:
         period = 1.0 / freq  # tempo de cada ciclo
         on_time = period * (duty_cycle / 100.0)
@@ -75,7 +75,7 @@ def frente(duration=None, duty_cycle=50, freq=100):
 
     parar()  # garante que pare ao final
 
-def tras(duration=None, duty_cycle=50, freq=100):
+def tras(duration=1, duty_cycle=50, freq=100):
     with gpio_lock:
         period = 1.0 / freq  # tempo de cada ciclo
         on_time = period * (duty_cycle / 100.0)
