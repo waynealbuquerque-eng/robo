@@ -20,6 +20,8 @@ def parar():
     GPIO.output(motorA_in2, GPIO.LOW)
     GPIO.output(motorB_in1, GPIO.LOW)
     GPIO.output(motorB_in2, GPIO.LOW)
+    print("parando")
+    time.sleep(2)
 
 def frente(t=2):
     GPIO.output(motorA_in1, GPIO.HIGH)
