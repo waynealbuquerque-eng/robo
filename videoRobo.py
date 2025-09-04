@@ -18,7 +18,7 @@ camera = cv2.VideoCapture(0)
 
 while True:
     ret, frame = camera.read()
-    frame = cv2.resize(frame, (320, 240))  # ou 320x240 para mais leve
+    frame = cv2.resize(frame, (640, 480))  # ou 320x240 para mais leve
 
     if not ret:
         break
