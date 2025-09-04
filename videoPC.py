@@ -5,7 +5,7 @@ import pickle
 
 # Conecta ao servidor
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(("IP_DA_RASP", 9999))
+client_socket.connect(("192.168.100.217", 9999))
 
 data = b""
 payload_size = struct.calcsize(">Q")
