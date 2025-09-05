@@ -105,19 +105,19 @@ def _pwm_drive(pins_on, duration, duty=0.6, freq=100):
 
     _schedule_stop(duration)
 
-def frente(duration=1):
+def frente(duration=0.5):
     with gpio_lock:
         _pwm_drive([MOTOR_DIR_IN1, MOTOR_ESQ_IN1], duration, duty=0.4)
 
-def tras(duration=1):
+def tras(duration=0.5):
     with gpio_lock:
         _pwm_drive([MOTOR_DIR_IN2, MOTOR_ESQ_IN2], duration, duty=0.4)
 
-def esquerda(duration=1):
+def esquerda(duration=0.2):
     with gpio_lock:
         _pwm_drive([MOTOR_DIR_IN2, MOTOR_ESQ_IN1], duration, duty=0.4)
 
-def direita(duration=1):
+def direita(duration=0.2):
     with gpio_lock:
         _pwm_drive([MOTOR_DIR_IN1, MOTOR_ESQ_IN2], duration, duty=0.4)
 
@@ -179,7 +179,7 @@ def handle_command(cmd_line: str):
     if not parts:
         return
     cmd = parts[0].upper()
-    dur = 1
+    dur = 0.5
     if len(parts) >= 2:
         try:
             dur = float(parts[1])
@@ -191,9 +191,9 @@ def handle_command(cmd_line: str):
     elif cmd == "TRAS":
         tras(dur)
     elif cmd in ("ESQ", "ESQUERDA"):
-        esquerda(dur)
+        esquerda(0.2)
     elif cmd in ("DIR", "DIREITA"):
-        direita(dur)
+        direita(0.2)
     elif cmd == "PARAR":
         _cancel_stop_timer()
         parar()
