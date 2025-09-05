@@ -47,37 +47,79 @@ def parar():
         GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
 
-def frente(duration=None):
-    with gpio_lock:
-        GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
-        GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
-        GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
-        GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
-    _schedule_stop(duration)
+# def frente(duration=1):
+#     with gpio_lock:
+#         GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
+#         GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
+#         GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
+#         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
+#     _schedule_stop(duration)
+#
+# def tras(duration=1):
+#     with gpio_lock:
+#         GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
+#         GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
+#         GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
+#         GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
+#     _schedule_stop(duration)
+#
+# def esquerda(duration=1):
+#     with gpio_lock:
+#         GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
+#         GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
+#         GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
+#         GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
+#     _schedule_stop(duration)
+#
+# def direita(duration=1):
+#     with gpio_lock:
+#         GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
+#         GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
+#         GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
+#         GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
+#     _schedule_stop(duration)
 
-def tras(duration=None):
-    with gpio_lock:
-        GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
-        GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
-        GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
-        GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
-    _schedule_stop(duration)
+def _pwm_drive(pins_on, duration, duty=0.4, freq=100):
+    """
+    Gera um PWM manual ligando/desligando os motores.
+    pins_on: lista de pinos que devem ficar HIGH durante o ciclo
+    duration: tempo total de movimento (s)
+    duty: duty cycle (0.0–1.0)
+    freq: frequência em Hz (100 Hz = ciclo de 10ms)
+    """
+    period = 1.0 / freq
+    t_on = period * duty
+    t_off = period - t_on
+    end_time = time.time() + duration
 
-def esquerda(duration=None):
-    with gpio_lock:
-        GPIO.output(MOTOR_DIR_IN1, GPIO.LOW)
-        GPIO.output(MOTOR_DIR_IN2, GPIO.HIGH)
-        GPIO.output(MOTOR_ESQ_IN1, GPIO.HIGH)
-        GPIO.output(MOTOR_ESQ_IN2, GPIO.LOW)
-    _schedule_stop(duration)
+    while time.time() < end_time:
+        # Liga
+        for pin in pins_on:
+            GPIO.output(pin, GPIO.HIGH)
+        time.sleep(t_on)
 
-def direita(duration=None):
+        # Desliga
+        for pin in pins_on:
+            GPIO.output(pin, GPIO.LOW)
+        time.sleep(t_off)
+
+    parar()
+
+def frente(duration=1):
     with gpio_lock:
-        GPIO.output(MOTOR_DIR_IN1, GPIO.HIGH)
-        GPIO.output(MOTOR_DIR_IN2, GPIO.LOW)
-        GPIO.output(MOTOR_ESQ_IN1, GPIO.LOW)
-        GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
-    _schedule_stop(duration)
+        _pwm_drive([MOTOR_DIR_IN1, MOTOR_ESQ_IN1], duration, duty=0.4)
+
+def tras(duration=1):
+    with gpio_lock:
+        _pwm_drive([MOTOR_DIR_IN2, MOTOR_ESQ_IN2], duration, duty=0.4)
+
+def esquerda(duration=1):
+    with gpio_lock:
+        _pwm_drive([MOTOR_DIR_IN2, MOTOR_ESQ_IN1], duration, duty=0.4)
+
+def direita(duration=1):
+    with gpio_lock:
+        _pwm_drive([MOTOR_DIR_IN1, MOTOR_ESQ_IN2], duration, duty=0.4)
 
 # ========================
 # VIDEO STREAM SERVER
