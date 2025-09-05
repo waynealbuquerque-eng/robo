@@ -103,7 +103,7 @@ def _pwm_drive(pins_on, duration, duty=0.6, freq=100):
             GPIO.output(pin, GPIO.LOW)
         time.sleep(t_off)
 
-    parar()
+    _schedule_stop(duration)
 
 def frente(duration=1):
     with gpio_lock:
