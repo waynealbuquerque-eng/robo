@@ -79,7 +79,7 @@ def parar():
 #         GPIO.output(MOTOR_ESQ_IN2, GPIO.HIGH)
 #     _schedule_stop(duration)
 
-def _pwm_drive(pins_on, duration, duty=0.4, freq=100):
+def _pwm_drive(pins_on, duration, duty=0.6, freq=100):
     """
     Gera um PWM manual ligando/desligando os motores.
     pins_on: lista de pinos que devem ficar HIGH durante o ciclo
